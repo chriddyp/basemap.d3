@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../src/basemap.css" />
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="../src/map.js"></script>
+
+
+<script src="data/usa_counties.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
+
+<script>
+
+function reduce(array, N){
+    var reduced = [];
+    for (i=0; i<array.length && reduced.length<N; i+= Math.ceil(array.length/N)){
+        reduced.push(array[i]);
+    }
+    return reduced;
+}
+
+var N = 500;
+var lon = reduce(usa_counties.longitude, N);
+var lat = reduce(usa_counties.latitude, N);
+var size = [];
+for (i=0; i<lon.length; i++) {
+    size.push(_.random(4, 18));
+}
+
+var gd = {};
+
+gd.data = [
+    {
+        type: "map-scatter",
+        lon: lon,
+        lat: lat,
+        locmode: 'USA-states',
+        marker: {
+            size: size,
+            color: 'rgba(158,188,218,0.8)',
+            line: {
+                width: 0
+            },
+            opacity: 0.7
+        }
+    }
+];
+
+gd.layout = {
+    width: 1200,
+    height: 1000,
+    map: {
+        projection: {
+            rotate: [-75, 0]
+        },
+        showsubunits: true,
+        showcoastlines: false,
+        showrivers: true,
+        lonaxis: {
+            showgrid: false
+        },
+        lataxis: {
+            showgrid: false
+        },
+        // resolution: '50m'
+    },
+
+};
+
+map.plot(gd);
+</script>
+</body>
